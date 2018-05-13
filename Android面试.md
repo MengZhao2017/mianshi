@@ -265,6 +265,28 @@ Activity→Viewgroup→view
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+Activity的四种启动模式：https://blog.csdn.net/YeeCeeYee/article/details/64958184
+
+众所周知当我们多次启动同一个Activity时，系统会创建多个实例，并把它们按照先进后出的原则一一放入任务栈中，当我们按back键时，就会有一个activity从任务栈顶移除，重复下去，直到任务栈为空，系统就会回收这个任务栈。但是这样以来，系统多次启动同一个Activity时就会重复创建多个实例，这种做法显然不合理，为了能够优化这个问题，Android提供四种启动模式来修改系统这一默认行为。 
+       进入正题，Activity的四种启动模式如下： 
+       standard、singleTop、singleTask、singleInstance 
+
+standard：
+这个模式是默认的启动模式，即标准模式，在不指定启动模式的前提下，系统默认使用该模式启动Activity，每次启动一个Activity都会重写创建一个新的实例，不管这个实例存不存在，这种模式下，谁启动了该模式的Activity，该Activity就属于启动它的Activity的任务栈中。这个Activity它的onCreate()，onStart()，onResume()方法都会被调用。
+
+singleTop：栈顶复用模式
+singleTop模式与standard类似，不同的是，当启动的Activity已经位于栈顶时，则直接使用它不创建新的实例。如果启动的Activity没有位于栈顶时，则创建一个新的实例位于栈顶
+
+singleTask：栈内复用模式
+如果希望Activity在整个应用程序中只存在一个实例，可以使用singleTask模式，当Activity的启动模式指定为 singleTask，每次启动该Activity时，系统首先会检查栈中是否存在该Activity的实例，如果发现已经存在则直接使用该实例，并将当前Activity之上的所有Activity出栈，如果没有发现则创建一个新的实例、
+
+singleInstance：
+在程序开发过程中，如果需要Activity在整个系统中都只有一个实例，这时就需要用到singleInstance模式。不同于以上介绍的三种模式，指定为singleInstance模式的Activity会启动一个新的任务栈来管理这个Activity。
+
+singleInstance模式加载Activity时，无论从哪个任务栈中启动该Activity，只会创建一个Activity实例，并且会使用一个全新的任务栈来装载该Activity实例。采用这种模式启动Activity会费为一下两种情况：
+第一种：如果要启动的Activity不存在，系统会创建一个新的任务栈，在创建该Activity的实例，并把该Activity加入栈顶
+第二种：如果要启动的Activity已经存在，无论位于哪个应用程序或者哪个任务栈中，系统都会把该Activity所在的任务栈转到前台，从而使该Activity显示出来。
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 ----------------------------------------------------------------------------------------------------------------------------------------
