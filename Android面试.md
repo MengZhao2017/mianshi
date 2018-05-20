@@ -374,6 +374,307 @@ Handler负责发送消息，Looper负责接收handler发送的消息，并直接
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+ 请描述一下Activity 生命周期
+ 
+七个周期函数，按顺序分别是: onCreate(), onStart(), onRestart(), onResume(), onPause(),onStop(), onDestroy()。
+
+onCreate(): 创建Activity时调用，设置在该方法中，还以Bundle的形式提供对以前存储的任何状态的访问。
+
+onStart(): Activity变为在屏幕上对用户可见时调用。
+
+onResume(): Activity开始与用户交互时调用(无论是启动还是重新启动一个活动，该方法总是被调用。
+
+onPause(): Activity被暂停或收回cpu和其他资源时调用，该方法用户保护活动状态的，也是保护现场。
+
+onStop(): Activity被停止并转为不可见阶段及后续的生命周期事件时调用。
+
+onRestart(): Activity被重新启动时调用。该活动仍然在栈中，而不是启动新的Activity。
+
+onDestroy():Activity被销毁时调用。
+
+1、完整生命周期: 即从一个Activity从出现到消失，对应的周期方法是从onCreate()到onDestroy()。
+
+2、可见生命周期: 当Activity处于可以用户看见的状态，但不一定能与用户交互时，将多次执行从onStart()到onStop()。
+
+3、前景生命周期: 当Activity处于Activity栈最顶端，能够与其他用户进行交互时，将多次执行从onResume()到onPause()。
+ 
+----------------------------------------------------------------------------------------------------------------------------------------
+
+两个Activity之间跳转时必然会执行的是哪几个方法
+
+答: 两个Activity之间跳转必然会执行的是下面几个方法。
+
+onCreate()//在Activity生命周期开始时调用。
+
+onRestoreInstanceState()//用来恢复UI状态。
+
+onRestart()//当Activity重新启动时调用。
+
+onStart()//当Activity对用户即将可见时调用。
+
+onResume()//当Activity与用户交互时，绘制界面。
+
+onSaveInstanceState()//即将移出栈顶保留UI状态时调用。
+
+onPause()//暂停当前活动Activity，提交持久数据的改变，停止动画或其他占用GPU资源的东西，由于下一个Activity在这个方法返回之前不会resume，所以这个方法的代码执行要快。
+
+onStop()//Activity不再可见时调用。
+
+onDestroy()//Activity销毁栈时被调用的最后一个方法。
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+service介绍
+
+1.Android Service是运行在后台的代码，不能与用户交互，可以运行在自己的进程，也可以运行在其他应用程序进程的上下文里。
+
+2.service启动方式：Context.startService()和Context.bindService()
+
+使用startService()启动service的时候，访问者与service没有关联，即访问者退出，service依然在运行。而使用bindService()的时候，访问者与service是关联绑定在一起的，访问者一旦退出，service就停止运行。
+
+3.service生命周期：
+
+Android Service只继承了onCreate(), onStart(),onDestroy()三个方法，当我们第一次启动Service时，先后调用onCreate(), onStart()这两个方法，当停止Service时，则执行onDestroy()方法时。如果Service已经启动了，当我们再次启动Service时，不会再执行onCreate()方法，而是直接执行onStart()方法。
+
+4.service的使用：
+
+第一种startServic()
+
+  Intent intent =new Intent(this,Service1.class);//Service1是我们创建好的service类，通过这句，来启动对应的service
+  startService（intent）;
+  
+第二种bindService()
+
+  Intent intent =new Intent(this,Service1.class);//Service1是我们创建好的service类，通过这句，来启动对应的service
+  bindService（intent）;
+  
+    1、activity能进行绑定得益于Serviece的接口。为了支持Service的绑定，实现onBind方法。
+
+    2、Service和Activity的连接可以用ServiceConnection来实现。需要实现一个新的ServiceConnection，重现onServiceConnected和OnServiceDisconnected方法，一旦连接建立，就能得到Service实例的引用。
+
+    3、执行绑定，调用bindService方法，传入一个选择了要绑定的Service的Intent(显示或隐式)和一个你实现了的ServiceConnection的实例
+ 
+5.service 通信
+
+如果service和访问者之间需要进行通信，应该调用bindService()绑定 service与访问者，通信结束后，再调用unbindservice()解除绑定，退出service。
+
+绑定service之后，service类中的IBinder onbind( Intent intent)方法的返回值，将传递给在访问者类中声明的serviceConnection的onServiceConnected(ComponentName name,IBinder service)方法中的参数，这样访问者就可以通过Inbind对象，实现与service之间的通信了。
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+AIDL跨进程通信  https://blog.csdn.net/u011974987/article/details/51243539
+
+AIDL是一种接口定义语言
+
+1.首先，我们就在AS里面新建一个aidl文件(ps:现在AS建aidl不要求和java包名相同了)：
+
+    package aidl;
+    interface IMyInterface {
+        String getInfor(String s);
+    }
+
+2.接着你sync project一下就可以在app/generated/source/aidl/debug/aidl里面发现由aidl文件生成的java文件了
+
+3.在service中实现，然后就看看Service:
+
+    public class MyService extends Service { 
+
+    public final static String TAG = "MyService";
+
+    private IBinder binder = new IMyInterface.Stub() {
+            @Override       
+            public String getInfor(String s) throws RemoteException { 
+                Log.i(TAG, s); 
+                return "我是 Service 返回的字符串"; 
+           }
+        };
+    @Overrid
+    public void onCreate() {
+        super.onCreate(); 
+        Log.i(TAG, "onCreat");    
+    }       
+    @Override    
+    public IBinder onBind(Intent intent) { 
+        return binder;  
+        }
+    }
+
+这里我们写了一个Service，看一下也比较简单。先new了一IMyInterface.Stub()并把它向上转型成了IBinder，最后在onBind方法中返回回去。可能你注意到了，在IMyInterface.Stub()的内部我们重写getInfor(String s) 方法，没错这就是我们 aidl文件中定义的接口。 
+
+4.实现activity也就是访问者
+
+        public class MainActivity extends AppCompatActivity {
+            public final static String TAG = "MainActivity";
+            private IMyInterface myInterface;
+            private ServiceConnection serviceConnection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    myInterface = IMyInterface.Stub.asInterface(service);
+                    Log.i(TAG, "连接Service 成功");
+                    try {
+                        String s = myInterface.getInfor("我是Activity传来的字符串");
+                        Log.i(TAG, "从Service得到的字符串：" + s);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    Log.e(TAG, "连接Service失败");
+                }
+            };
+            @Override
+            protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_main);
+                startAndBindService();
+            }
+            private void startAndBindService() {
+                Intent service = new Intent(MainActivity.this, MyService.class);
+                //startService(service);
+                bindService(service, serviceConnection, Context.BIND_AUTO_CREATE);
+            }
+        }
+
+  上面的过程就实现了service和activity之间的通信
+  
+AIDL的理解：
+  
+  1.Service中的IBinder 
+还记得我们在MyService中利用new IMyInterface.Stub()向上转型成了IBinder然后在onBind方法中返回的。那我们就看看IMyInterface.Stub吧：
+
+    public static abstract class Stub extends android.os.Binder implements aidl.IMyInterface {
+    ..........
+    }
+
+可以看到，Stub是IMyInterface中的一个静态抽象类，继承了Binder，并且实现了IMyInterface接口。这也就解释了我们定义IMyInterface.Stub的时候为什么需要实现IMyInterface中的方法了，也说明了为什么我们可以把IMyInterface.Stub向上转型成IBinder了。
+  
+  2.Activity中的IMyInterface 
+在Activity中，通过ServiceConnection连接MyService并成功回调onServiceConnected中我们把传回来的IBinder通IMyInterface.Stub.asInterface(service)转换成为IMyInterface
+  
+----------------------------------------------------------------------------------------------------------------------------------------
+请描述一下Intent 和 Intent Filter。
+
+Intent在Android中被翻译为”意图”，他是三种应用程序基本组件-Activity，Service和broadcast receiver之间相互激活的手段。
+
+在调用Intent名称时使用ComponentName也就是类的全名时为显示调用。这种方式一般用于应用程序的内部调用，因为你不一定会知道别人写的类的全名。而Intent Filter是指意图过滤，不出现在代码中，而是出现在android Manifest文件中，以<intent-filter>的形式。（有一个例外是broadcast receiver的intent
+filter是使用Context.registerReceiver()来动态设定的，其中intent filter也是在代码中创建的）
+
+一个intent有action，data，category等字段。一个隐式intent为了能够被某个intent filter接收，必须通过3个测试，一个intent为了被某个组件接收，则必须通过它所有的intent filter中的一个。
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+ 请描述一下BroadcastReceiver。
+
+Broadcast Receiver用于接收并处理广播通知(broadcast announcements)。多数的广播是系统发起的，如地域变换、电量不足、来电短信等。程序也可以播放一个广播。程序可以有任意数量的broadcast receivers来响应它觉得重要的通知。Broadcast receiver可以通过多种方式通知用户: 启动activity、使用NotificationManager、开启背景灯、振动设备、播放声音等，最典型的是在状态栏显示一个图标，这样用户就可以点它打开看通知内容。通常我们的某个应用或系统本身在某些事件(电池电量不足、来电短信)来临时会广播一个Intent出去，我们利用注册一个broadcast
+receiver来监听这些Intent并获取Intent中的数据。
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+ 在manifest和代码中如何注册和使用 broadcast receiver 。
+
+答: 在android的manifest中注册
+
+ 
+    <receiver android: name =“Receiver1”>
+
+       <intent-filter>
+
+         <!----和Intent中的action对应--->
+
+         <actionandroid: name=“com.forrest.action.mybroadcast”/>
+
+     </intent-filter>
+
+    </receiver>
+在代码中注册
+
+1、 IntentFilter filter = new IntentFilter(“com.forrest.action.mybroadcast”);//和广播中Intent的action对应;
+
+2、 MyBroadcastReceiver br= new MyBroadcastReceiver();
+
+3、 registerReceiver(br, filter);
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+请介绍下Android的数据存储方式。
+
+Android提供了5中存储数据的方式，分别是以下几种
+
+1、使用Shared Preferences存储数据，用来存储key-value，pairs格式的数据，它是一个轻量级的键值存储机制，只可以存储基本数据类型。
+
+2、使用文件存储数据，通过FileInputStream和FileOutputStream对文件进行操作。在Android中，文件是一个应用程序私有的，一个应用程序无法读写其他应用程序的文件。
+
+3、使用SQLite数据库存储数据，Android提供的一个标准数据库，支持SQL语句。
+
+4、使用Content Provider存储数据，是所有应用程序之间数据存储和检索的一个桥梁，它的作用就是使得各个应用程序之间实现数据共享。它是一个特殊的存储数据的类型，它提供了一套标准的接口用来获取数据，操作数据。系统也提供了音频、视频、图像和个人信息等几个常用的Content Provider。如果你想公开自己的私有数据，可以创建自己的Content Provider类，或者当你对这些数据拥有控制写入的权限时，将这些数据添加到Content Provider中实现共享。外部访问通过Content Resolver去访问并操作这些被暴露的数据。
+
+5、使用网络存储数据
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+ListView如何提高其效率？
+
+1.使用分页加载，不要一次性加载所有的数据。
+
+2.优化加载布局：复用convertview，在getItem()中判断convertview是否为空，不为空就复用。即判断是否加载了布局，不用每次都要加载布局文件
+
+3.优化加载空间：ViewHoder的使用，会将控件的实例存放在viewholder里，然后调用settag()，将viewholder对象存储到view里。
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Android系统架构
+
+Linux内核层→运行库→应用程序框架层→应用程序层
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/framework.png)
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Android中 内存泄漏 https://www.jianshu.com/p/bf159a9c391a
+
+https://www.jianshu.com/p/ac00e370f83d?hmsr=toutiao.io&utm_medium=toutiao.io&utm_source=toutiao.io
+
+1.Static Activities
+
+在类中定义了静态Activity变量，把当前运行的Activity实例赋值于这个静态变量。
+如果这个静态变量在Activity生命周期结束后没有清空，就导致内存泄漏。因为static变量是贯穿这个应用的生命周期的，所以被泄漏的Activity就会一直存在于应用的进程中，不会被垃圾回收器回收。
+
+2.Inner Classes
+
+假设Activity中有个内部类，这样做可以提高可读性和封装性。将如我们创建一个内部类，而且持有一个静态变量的引用，恭喜，内存泄漏就离你不远了。
+内部类的优势之一就是可以访问外部类，不幸的是，导致内存泄漏的原因，就是内部类持有外部类实例的强引用。
+
+3.Handler
+
+同样道理，定义匿名的Runnable，用匿名类Handler执行。Runnable内部类会持有外部类的隐式引用，被传递到Handler的消息队列MessageQueue中，在Message消息没有被处理之前，Activity实例不会被销毁了，于是导致内存泄漏。
+
+4.Threads
+
+只要是匿名类的实例，不管是不是在工作线程，都会持有Activity的引用，导致内存泄漏。
+
+5.Sensor Manager
+
+最后，通过Context.getSystemService(int name)可以获取系统服务。这些服务工作在各自的进程中，帮助应用处理后台任务，处理硬件交互。如果需要使用这些服务，可以注册监听器，这会导致服务持有了Context的引用，如果在Activity销毁的时候没有注销这些监听器，会导致内存泄漏
+
+6.没有及时释放资源。
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -395,7 +696,29 @@ Handler负责发送消息，Looper负责接收handler发送的消息，并直接
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 
