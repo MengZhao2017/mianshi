@@ -265,6 +265,9 @@ Activity→Viewgroup→view
 (5) OnTouchListener 优先于 onTouchEvent()对事件进行消费。
 上面的消费即表示相应函数返回值为 true。
 
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/touch.png)
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 Activity的四种启动模式：https://blog.csdn.net/YeeCeeYee/article/details/64958184
