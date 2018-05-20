@@ -317,36 +317,57 @@ android默认给每个应用只分配16M的内存，所以如果加载过多的�
 Handler使用原理
 
 handler是什么呢？
+
 handler是Android给我们提供来更新UI的一套机制，也是一套消息处理机制，我们可以发送消息，也可以通过它来处理消息。
+
 Android在设计的时候，就封装了一套这样消息创建 传递 处理机制，如果 不遵循这样的机制就没有办法更新UI信息，就会抛出异常。
 
 handler的用法：
+
 1.传递Message，用于接受子线程发送的数据，并用此数据配合主线程更新UI，有一下的方法：
+
         sendMessage(Message)
+        
         sendMessageAtTime(Message,long)
+        
         sendMessageDelayed(Message,long)
+        
 2.传递Runnable对象，用于通过Handler绑定的消息队列，安排不同操作的执行顺序，主要有一下方法：
+
         post(Runnable)
+        
         postAtTime(Runnable, long)
+        
         postDelayed(Runnable.long)
+        
 3.传递Callback对象，CallBack用于截获handler发送的消息，如果返回true。就截获成功，不会向下传递。
 
 Android为什么要设计只能通过handler机制更新UI呢？
+
 最根本的目的就是解决多线程并发的问题。
+
 假设在一个Activity中，有多个线程去更新UI，并且没有枷锁机制，那么会产生什么样的问题呢？那就是更新界面混乱，如果对更新的UI的操作枷锁的话，又会导致性能下降。handler通过消息队列，保证了消息处理的先后有序性。
+
 鉴于以上问题的考虑，Android给我们提供了一套更新UI的机制，我们只要使用一套机制就好，所有的更新UI的操作都是在主线程轮询处理。
 
 handler原理是什么呢？
 
 （1）Handler封装了消息的发送（主要包括消息发送给谁）
+
         通过Handler的构造函数，绑定一个loop对象，loop.looper()。
+        
         Looper:
+        
         (a)内部包含一个消息队列，也就是MessageQueue，所有Handler发送的消息都走向这个队列。
+        
         (b)Looper.loop()方法就是一个for死循环，不断的从MessageQueue取消息，如果有消息就处理消息，没有消息就阻塞消息
+        
 （2）MessageQueue，就是一个消息队列，可以添加消息，处理消息。
+
 （3）Handler也不难，比较简单，在构造Handler的时候，内部会跟Looper进行关联，通过Looper.mylooper(）获取到Looper，找到了Looper也就找到MessageQueue，在Handler中发送消息，其实就是向MessageQueue队列中发送消息。
 
 总结：
+
 Handler负责发送消息，Looper负责接收handler发送的消息，并直接把消息回传给自己，MessageQueue就是一个存储消息的容器。
 一个线程中只有一个Looper实例，一个MessageQueue实例，可以有多个Handler实例。
 
