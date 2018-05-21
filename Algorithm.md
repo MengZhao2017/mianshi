@@ -122,28 +122,206 @@
 	}
      }
 
-		运行结果：
-		36
-		35
-		33
-		34
+	运行结果：
+	36
+	35
+	33
+	34
 
-		****************************
-		34
-		33
-		35
-		36
+	****************************
+	34
+	33
+	35
+	36
 
+----------------------------------------------------------------------------------------------------------------------------------------
+
+求链表中倒数第k个结点
+
+    public class find_daoshu_k {
+	public static void main(String[] args) {
+		find_daoshu_k a=new find_daoshu_k();
+		node head=a.new node(4);
+		node no1=a.new node(3);
+		node no2=a.new node(1);
+		node no3=a.new node(2);
+		node no4=a.new node(5);
+		head.setNext(no1);
+		no1.setNext(no2);
+		no2.setNext(no3);
+		no3.setNext(no4);
+		node h=head;
+		while(h!=null)
+		{
+			System.out.println(h.getData()+' ');
+			h=h.getNext();
+		}
+		node s=find_daoshu_elment(head,2);
+		System.out.println("\n****************************");
+	    System.out.println(s.getData()+' ');
+
+	}
+	
+	
+    class node{
+		
+	    node next=null;
+		int data;
+		 public node(int data)
+		 {
+			 this.data=data;
+		 }
+		public node getNext() {
+			return next;
+		}
+		public void setNext(node next) {
+			this.next = next;
+		}
+		public int getData() {
+			return data;
+		}
+		public void setData(int data) {
+			this.data = data;
+		} 
+	}
+	
+	
+	public static node find_daoshu_elment(node head,int k)
+	{
+		if(k<1)
+		{
+			return null;
+		}
+		
+		node p1=head;
+		node p2=head;
+		for (int i =0;i<k;i++)
+		{
+			p1=p1.next;
+		}
+		while (p1!=null)
+		{
+			p1=p1.next;
+			p2=p2.next;
+		}
+		
+		return p2;
+	}
+
+     }
+	实验结果：
+	36
+	35
+	33
+	34
+	37
+
+	****************************
+	34
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+查找链表的中间结点
 
+	public class find_mid_lianbiao {
+	public static void main(String[] args) {
+		
+		find_mid_lianbiao a=new find_mid_lianbiao();
+		node head=a.new node(4);
+		node no1=a.new node(3);
+		node no2=a.new node(1);
+		node no3=a.new node(2);
+		node no4=a.new node(5);
+		head.setNext(no1);
+		no1.setNext(no2);
+		no2.setNext(no3);
+		no3.setNext(no4);
+		node h=head;
+		while(h!=null)
+		{
+			System.out.println(h.getData()+' ');
+			h=h.getNext();
+		}
+		node s=findMid(head);
+		System.out.println("\n****************************");
+		System.out.println(s.getData()+' ');
+	}
+
+ 	 class node{
+	    node next=null;
+		int data;
+		 public node(int data)
+		 {
+			 this.data=data;
+		 }
+		public node getNext() {
+			return next;
+		}
+		public void setNext(node next) {
+			this.next = next;
+		}
+		public int getData() {
+			return data;
+		}
+		public void setData(int data) {
+			this.data = data;
+		} 
+	   }
+  
+  	//查找链表中间节点
+  	public static node findMid(node head)
+  	{
+	  if(head==null || head.next==null)
+	  {
+		  return head;
+	  }
+	  node p=head;
+	  node q=head;
+	  while(p.next!=null && q.next!=null)
+	  {
+		  p=p.next;
+		  q=q.next.next;
+	  }
+	  return p;
+ 	 }
+	}
+
+	实验结果；
+	36
+	35
+	33
+	34
+	37
+
+	****************************
+	33
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+删除链表中重复的结点：
 
-----------------------------------------------------------------------------------------------------------------------------------------
+		public static void  delet_chongfu_element(node head)
+	{
+		
+		node p=head;
+		while(p.next!=null)
+		{
+			node q=p;
+			while(q.next!=null)
+			{
+				if(p.data==q.next.data)
+				{
+					q.next=q.next.next;
+				}else {
+					q=q.next;
+				}
+			}
+			p=p.next;
+			System.out.println(p.getData()+' ');
+		}
+		
+	}
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
