@@ -3,35 +3,35 @@
 
 寻找两个整数的GCD：
 
-public class GCD {
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Scanner s=new Scanner(System.in);
-		System.out.println("请输入第一个数：");
-		int a=s.nextInt();
-		System.out.println("请输入第二个数：");
-		int b=s.nextInt();
-		System.out.println("最大公约数是："+G(a,b));
-	}
-	public static int G(int a,int b)
-	{
-		int gcd=1;
-		if(a%b==0)
-		{
-			return b;
+	public class GCD {
+		public static void main(String[] args) {
+			// TODO Auto-generated method stub
+			Scanner s=new Scanner(System.in);
+			System.out.println("请输入第一个数：");
+			int a=s.nextInt();
+			System.out.println("请输入第二个数：");
+			int b=s.nextInt();
+			System.out.println("最大公约数是："+G(a,b));
 		}
-		for(int k=b/2;k>=1;k--)
+		public static int G(int a,int b)
 		{
-			if(a%k==0 && b%k==0)
+			int gcd=1;
+			if(a%b==0)
 			{
-				gcd=k;
-				break;
+				return b;
 			}
+			for(int k=b/2;k>=1;k--)
+			{
+				if(a%k==0 && b%k==0)
+				{
+					gcd=k;
+					break;
+				}
+			}
+			return gcd;
 		}
-		return gcd;
-	}
 
-}
+	}
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
