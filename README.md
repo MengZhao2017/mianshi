@@ -26,3 +26,5 @@
 [SQL](https://github.com/MengZhao2017/mianshi/blob/master/SQL.md)
 --
 
+[Algorithm](https://github.com/MengZhao2017/mianshi/blob/master/Algorithm.md)
+--
