@@ -33,7 +33,107 @@
 
 	}
 
+		运行结果：
+		请输入第一个数：
+		64
+		请输入第二个数：
+		42
+		最大公约数是：2
+
 ----------------------------------------------------------------------------------------------------------------------------------------
+
+链表的翻转
+
+     public class lianbiao_reverse {
+	 class node{
+		
+	    node next=null;
+		int data;
+		 public node(int data)
+		 {
+			 this.data=data;
+		 }
+		public node getNext() {
+			return next;
+		}
+		public void setNext(node next) {
+			this.next = next;
+		}
+		public int getData() {
+			return data;
+		}
+		public void setData(int data) {
+			this.data = data;
+		}
+	}
+	
+
+	public static void main(String[] args) {
+		lianbiao_reverse a=new lianbiao_reverse();
+		node head=a.new node(4);//内部类引用外部类的效果
+		node no1=a.new node(3);
+		node no2=a.new node(1);
+		node no3=a.new node(2);
+		head.setNext(no1);
+		no1.setNext(no2);
+		no2.setNext(no3);
+		//打印翻转前的链表
+		node h=head;
+		while(h!=null)
+		{
+			System.out.println(h.getData()+' ');
+			h=h.getNext();
+		}
+		//打印翻转后的链表
+		head=Reverse(head);
+		System.out.println("\n****************************");
+		while(head!=null)
+		{
+			System.out.println(head.getData()+' ');
+			head=head.getNext();
+		}
+	}
+	
+
+	/** 
+	 * 
+	 * 链表翻转
+	 * 
+	 * **/
+	public static node Reverse(node head)
+	{
+		if(head==null || head.next==null)
+			return head;
+		node pReversehead=head;  //这个是翻转后的头结点
+		node pNode=head;       //这个是原来链表指示头结点的
+		node prev=null;       //这个是新的链表的临时结点
+		node pnext=null;   //这个是旧表的临时结点，用来存储头结点的下一个结点
+		while(pNode!=null)
+		{
+			pnext=pNode.next;
+			if(pnext==null)
+				pReversehead=pNode;
+			pNode.next=prev;
+			prev=pNode;
+			pNode=pnext;
+		
+		}
+		return pReversehead;
+	}
+     }
+
+		运行结果：
+		36
+		35
+		33
+		34
+
+		****************************
+		34
+		33
+		35
+		36
+
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
