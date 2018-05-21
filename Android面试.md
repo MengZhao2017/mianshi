@@ -1,6 +1,6 @@
 
-#android
-
+Android
+====
 1.五种布局： FrameLayout 、 LinearLayout 、 AbsoluteLayout 、 RelativeLayout 、 TableLayout 全都继承自ViewGroup，各自特点及绘制效率对比。
 
 FrameLayout(框架布局)
@@ -660,12 +660,33 @@ https://www.jianshu.com/p/ac00e370f83d?hmsr=toutiao.io&utm_medium=toutiao.io&utm
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+Recyclerview介绍
+
+使用LayoutManager来确定每一个Item的排列方式，为增加和删除提供了默认的动画效果。
+
+LayoutManager：LinearLayoutManager，GridLayoutManager，StageredGridLayoutManager.
+
+与Listview的区别：
+1.自带ItemAnimation的效果
+2.使用LayoutManager来管理每一个Item
+3.封装了ViewHolder的回收利用
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+Android中进程分类：
+
+前台进程、可视进程、服务进程、后台进程
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+Android中几种动画
+
+补间动画：rotate，scale，translate
+
+帧动画：连续的GIF效果
+
+属性动画：不停改变对象的属性
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
