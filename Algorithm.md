@@ -326,6 +326,50 @@
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+计算随机字符串中每个字符出现的次数：
+
+	public class sum_String_count {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner as=new Scanner(System.in);
+		System.out.println("请输入一个字符串:");
+		String Str=as.next();
+	
+		Map map=new HashMap();
+		for(int i=0;i<Str.length();i++)
+		{
+			char ch=Str.charAt(i);
+			boolean b=map.containsKey(ch);
+			if(b)
+			{
+				int count=(int) map.get(ch);
+				count=count+1;
+				map.put(ch, count);
+			}else
+			{
+				map.put(ch, 1);
+			}
+		}
+		//我们通常说，keySet()返回所有的键，values()返回所有的值
+		for(Object ch:map.keySet())
+		{
+			Object value=map.get(ch);
+			System.out.println("字符："+ch+"出现的次数为："+value);
+		}
+	}
+	}
+	运行结果：
+
+	请输入一个字符串:
+	gyuljkhkghfl
+	字符：u出现的次数为：1
+	字符：f出现的次数为：1
+	字符：g出现的次数为：2
+	字符：h出现的次数为：2
+	字符：y出现的次数为：1
+	字符：j出现的次数为：1
+	字符：k出现的次数为：2
+	字符：l出现的次数为：2
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
