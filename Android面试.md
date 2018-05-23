@@ -696,6 +696,38 @@ Android中几种动画
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+httpclient和httpURLconnection
+
+HttpClient
+
+DefaultHttpClient和它的兄弟AndroidHttpClient都是HttpClient具体的实现类，它们都拥有众多的API，而且实现比较稳定，bug数量也很少。
+但同时也由于HttpClient的API数量过多，使得我们很难在不破坏兼容性的情况下对它进行升级和扩展，所以目前Android团队在提升和优化HttpClient方面的工作态度并不积极。
+
+简单来说，用HttpClient发送请求、接收响应都很简单，只需要五大步骤即可：（要牢记）
+
+1、创建代表客户端的HttpClient对象。
+
+2、创建代表请求的对象，如果需要发送GET请求，则创建HttpGet对象，如果需要发送POST请求，则创建HttpPost对象。注：对于发送请求的参数，GET和POST使用的方式不同，GET方式可以使用拼接字符串的方式，把参数拼接在URL结尾；POST方式需要使用setEntity(HttpEntity entity)方法来设置请求参数。
+
+3、调用HttpClient对象的execute（HttpUriRequest request）发送请求，执行该方法后，将获得服务器返回的HttpResponse对象。服务器发还给我们的数据就在这个HttpResponse相应当中。调用HttpResponse的对应方法获取服务器的响应头、响应内容等。
+
+4、检查相应状态是否正常。服务器发给客户端的相应，有一个相应码：相应码为200，正常；相应码为404，客户端错误；相应码为505，服务器端错误。
+
+5、获得相应对象当中的数据
+
+HttpURLconnection的使用：
+
+创建一个URL对象： URL url = new URL(http://www.baidu.com);
+
+调用URL对象的openConnection( )来获取HttpURLConnection对象实例： HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+设置HTTP请求使用的方法:GET或者POST，或者其他请求方式比如：PUT conn.setRequestMethod("GET");
+
+设置连接超时，读取超时的毫秒数，以及服务器希望得到的一些消息头 conn.setConnectTimeout(6*1000); conn.setReadTimeout(6 * 1000);
+
+调用getInputStream()方法获得服务器返回的输入流，然后输入流进行读取了 InputStream in = conn.getInputStream();
+
+最后调用disconnect()方法将HTTP连接关掉 conn.disconnect();
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
