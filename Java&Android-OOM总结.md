@@ -2,13 +2,11 @@
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 Android 内存泄漏总结
+--
+内存管理的目的就是让我们在开发中怎么有效的避免我们的应用出现内存泄漏的问题。内存泄漏大家都不陌生了，简单粗俗的讲，就是该被释放的对象没有释放，一直被某个或某些实例所持有却不再被使用导致 GC 不能回收。
 
-内存管理的目的就是让我们在开发中怎么有效的避免我们的应用出现内存泄漏的问题。内存泄漏大家都不陌生了，简单粗俗的讲，就是该被释放的对象没有释放，一直被某个或某些实例所持有却不再被使用导致 GC 不能回收。最近自己阅读了大量相关的文档资料，打算做个 总结 沉淀下来跟大家一起分享和学习，也给自己一个警示，以后 coding 时怎么避免这些情况，提高应用的体验和质量。
-
-我会从 java 内存泄漏的基础知识开始，并通过具体例子来说明 Android 引起内存泄漏的各种原因，以及如何利用工具来分析应用内存泄漏，最后再做总结。
-
-##Java 内存分配策略
-
+Java 内存分配策略
+--
 Java 程序运行时的内存分配策略有三种,分别是静态分配,栈式分配,和堆式分配，对应的，三种存储策略使用的内存空间主要分别是静态存储区（也称方法区）、栈区和堆区。
 
 静态存储区（方法区）：主要存放静态数据、全局 static 数据和常量。这块内存在程序编译时就已经分配好，并且在程序整个运行期间都存在。
@@ -19,23 +17,24 @@ Java 程序运行时的内存分配策略有三种,分别是静态分配,栈式�
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
-##栈与堆的区别：
+#### 栈与堆的区别：
 
-在方法体内定义的（局部变量）一些基本类型的变量和对象的引用变量都是在方法的栈内存中分配的。当在一段方法块中定义一个变量时，Java 就会在栈中为该变量分配内存空间，当超过该变量的作用域后，该变量也就无效了，分配给它的内存空间也将被释放掉，该内存空间可以被重新使用。
+在方法体内定义的（局部变量）一些基本类型的变量和对象的引用变量都是在方法的栈内存中分配的。
+当在一段方法块中定义一个变量时，Java 就会在栈中为该变量分配内存空间，当超过该变量的作用域后，该变量也就无效了，分配给它的内存空间也将被释放掉，该内存空间可以被重新使用。
 
 堆内存用来存放所有由 new 创建的对象（包括该对象其中的所有成员变量）和数组。在堆中分配的内存，将由 Java 垃圾回收器来自动管理。在堆中产生了一个数组或者对象后，还可以在栈中定义一个特殊的变量，这个变量的取值等于数组或者对象在堆内存中的首地址，这个特殊的变量就是我们上面说的引用变量。我们可以通过这个引用变量来访问堆中的对象或者数组。
 
 举个例子:
 
-public class Sample() {
-    int s1 = 0;
-    Sample mSample1 = new Sample();
+    public class Sample() {
+       int s1 = 0;
+       Sample mSample1 = new Sample();
 
     public void method() {
         int s2 = 1;
         Sample mSample2 = new Sample();
-    }
-}
+        }
+     }
 
 Sample mSample3 = new Sample();
 
@@ -50,10 +49,11 @@ Sample 类的局部变量 s2 和引用变量 mSample2 都是存在于栈中，�
 
 了解了 Java 的内存分配之后，我们再来看看 Java 是怎么管理内存的。
 
-##Java是如何管理内存
+####  Java是如何管理内存
 
-Java的内存管理就是对象的分配和释放问题。在 Java 中，程序员需要通过关键字 new 为每个对象申请内存空间 (基本类型除外)，所有的对象都在堆 (Heap)中分配空间。另外，对象的释放是由 GC 决定和执行的。在 Java 中，内存的分配是由程序完成的，而内存的释放是由 GC 完成的，这种收支两条线的方法确实简化了程序员的工作。但同时，它也加重了JVM的工作。这也是 Java 程序运行速度较慢的原因之一。因为，GC 为了能够正确释放对象，GC 必须监控每一个对象的运行状态，包括对象的申请、引用、被引用、赋值等，GC 都需要进行监控。
+Java的内存管理就是对象的分配和释放问题。在 Java 中，程序员需要通过关键字 new 为每个对象申请内存空间 (基本类型除外)，所有的对象都在堆 (Heap)中分配空间。另外，对象的释放是由 GC 决定和执行的。
 
+在 Java 中，内存的分配是由程序完成的，而内存的释放是由 GC 完成的，这种收支两条线的方法确实简化了程序员的工作。但同时，它也加重了JVM的工作。这也是 Java 程序运行速度较慢的原因之一。因为，GC 为了能够正确释放对象，GC 必须监控每一个对象的运行状态，包括对象的申请、引用、被引用、赋值等，GC 都需要进行监控。
 
 监视对象状态是为了更加准确地、及时地释放对象，而释放对象的根本原则就是该对象不再被引用。
 
@@ -63,15 +63,14 @@ Java使用有向图的方式进行内存管理，可以消除引用循环的问�
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
-##什么是Java中的内存泄露
+#### 什么是Java中的内存泄露
 
-在Java中，内存泄漏就是存在一些被分配的对象，这些对象有下面两个特点，
+在Java中，内存泄漏就是存在一些被分配的对象，这些对象有下面两个特点：
+
 首先，这些对象是可达的，即在有向图中，存在通路可以与其相连；
+
 其次，这些对象是无用的，即程序以后不会再使用这些对象。如果对象满足这两个条件，这些对象就可以判定为Java中的内存泄漏，这些对象不会被GC所回收，然而它却占用内存。
 
-在C++中，内存泄漏的范围更大一些。有些对象被分配了内存空间，然后却不可达，由于C++中没有GC，这些内存将永远收不回来。在Java中，这些不可达的对象都由GC负责回收，因此程序员不需要考虑这部分的内存泄露。
-
-通过分析，我们得知，对于C++，程序员需要自己管理边和顶点，而对于Java程序员只需要管理边就可以了(不需要管理顶点的释放)。通过这种方式，Java提高了编程的效率。
 
 因此，通过以上分析，我们知道在Java中也有内存泄漏，但范围比C++要小一些。因为Java从语言上保证，任何对象都是可达的，所有的不可达对象都由GC管理。
 
@@ -80,15 +79,16 @@ Java使用有向图的方式进行内存管理，可以消除引用循环的问�
 
 同样给出一个 Java 内存泄漏的典型例子，
 
-Vector v = new Vector(10);
-for (int i = 1; i < 100; i++) {
-    Object o = new Object();
-    v.add(o);
-    o = null;   
-}
+    Vector v = new Vector(10);
+    for (int i = 1; i < 100; i++) {
+        Object o = new Object();
+        v.add(o);
+        o = null;   
+    }
+    
 在这个例子中，我们循环申请Object对象，并将所申请的对象放入一个 Vector 中，如果我们仅仅释放引用本身，那么 Vector 仍然引用该对象，所以这个对象对 GC 来说是不可回收的。因此，如果对象加入到Vector 后，还必须从 Vector 中删除，最简单的方法就是将 Vector 对象设置为 null。
 
-详细Java中的内存泄漏
+#### 详细Java中的内存泄漏
 
 1.Java内存回收机制
 
@@ -106,13 +106,14 @@ Java内存泄漏的根本原因是什么呢？长生命周期的对象持有短�
 
 例如
 
-Static Vector v = new Vector(10);
-for (int i = 1; i<100; i++)
-{
-Object o = new Object();
-v.add(o);
-o = null;
-}
+    Static Vector v = new Vector(10);
+    for (int i = 1; i<100; i++)
+    {
+    Object o = new Object();
+    v.add(o);
+    o = null;
+    }
+    
 在这个例子中，循环申请Object 对象，并将所申请的对象放入一个Vector 中，如果仅仅释放引用本身（o=null），那么Vector 仍然引用该对象，所以这个对象对GC 来说是不可回收的。因此，如果对象加入到Vector 后，还必须从Vector 中删除，最简单的方法就是将Vector对象设置为null。
 
 
@@ -139,12 +140,32 @@ Handler 的使用造成的内存泄漏问题应该说是最为常见了，很多
 
 3.各种资源的链接释放。
 
+4.static关键字
 
+用static修饰的变量，会导致该变量的生命周期延长，误用Context的情况最多
+
+    错误示例：
+            public class ClassName
+            {
+                private static Context mContext;
+            }
+
+引用链:Activity->mContext
+
+错误分析:context持有Activity,导致Activity没有及时被回收
+
+解决方案:
+a.Context尽量使用Application的Context(Application的Context的生命周期比较长，引用它不会出现内存泄露)
+b.使用WeakReference代替强引用。如WeakReference<Context> mContex;
+    
+ 5.单例模式造成的内存泄漏
+
+单例模式和application的生命周期是保持一致的,因此Activity对象无法被及时回收.同样需要用到弱引用进行优化
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
-
 实例：
+
 假设我们的应用会用到大量的默认图片，比如应用中有默认的头像，默认游戏图标等等，这些图片很多地方会用到。如果每次都去读取图片，由于读取文件需要硬件操作，速度较慢，会导致性能较低。所以我们考虑将图片缓存起来，需要的时候直接从内存中读取。但是，由于图片占用内存空间比较大，缓存很多图片需要很多的内存，就可能比较容易发生OutOfMemory异常。这时，我们可以考虑使用软/弱引用技术来避免这个问题发生。以下就是高速缓冲器的雏形：
 
 首先定义一个HashMap，保存软引用对象。
@@ -156,28 +177,28 @@ private Map <String, SoftReference<Bitmap>> imageCache = new HashMap <String, So
 具体代码如下:
 
 
-public class cacheBySoftRef{
-        //首先定义一个Hashmap，保存软引用对象
-        private Map <String, SoftReference<Bitmap>> imageCache = new HashMap <String, SoftReference<Bitmap>> ();
-        //在定义一个方法，保存bitmap的软引用到Hashmap
-        public void addBitmapToCache(String path)
-        {
-         Bitmap bitmap=BitmapFactory.decode(path);
-         SoftReference<Bitmap> softBitmap=new SofeReference<Bitmap>(bitmap>;
-         //添加该对象到Map中使其缓存  
-         imageCache.put(path,softmap )
-         }
-         //获取的时候，通过get()方法获得
-         public Bitmap getBitmap(String path)
-         {
-         //从缓存中取软引用的Bitmap对象
-         softReference<Bitmap> softbitmap=imageCache.get(path);
-         //通过软引用取出Bitmap对象。如果由于内存不足Bitmap将会被回收，，如果未被回收，则可重复使用，提高速度。
-         Bitmap bitmap=softbitmap.get();
-         return bitmap;
-         }
+    public class cacheBySoftRef{
+            //首先定义一个Hashmap，保存软引用对象
+            private Map <String, SoftReference<Bitmap>> imageCache = new HashMap <String, SoftReference<Bitmap>> ();
+            //在定义一个方法，保存bitmap的软引用到Hashmap
+            public void addBitmapToCache(String path)
+            {
+             Bitmap bitmap=BitmapFactory.decode(path);
+             SoftReference<Bitmap> softBitmap=new SofeReference<Bitmap>(bitmap>;
+             //添加该对象到Map中使其缓存  
+             imageCache.put(path,softmap )
+             }
+             //获取的时候，通过get()方法获得
+             public Bitmap getBitmap(String path)
+             {
+             //从缓存中取软引用的Bitmap对象
+             softReference<Bitmap> softbitmap=imageCache.get(path);
+             //通过软引用取出Bitmap对象。如果由于内存不足Bitmap将会被回收，，如果未被回收，则可重复使用，提高速度。
+             Bitmap bitmap=softbitmap.get();
+             return bitmap;
+             }
 
-}
+    }
 使用软引用以后，在OutOfMemory异常发生之前，这些缓存的图片资源的内存空间可以被释放掉的，从而避免内存达到上限，避免Crash发生。
 
 如果只是想避免OutOfMemory异常的发生，则可以使用软引用。如果对于应用的性能更在意，想尽快回收一些占用内存比较大的对象，则可以使用弱引用。
@@ -188,7 +209,6 @@ public class cacheBySoftRef{
 
 总结：
 
-
 1.对 Activity 等组件的引用应该控制在 Activity 的生命周期之内； 如果不能就考虑使用 getApplicationContext 或者 getApplication，以避免 Activity 被外部长生命周期的对象引用而泄露。
 
 2.尽量不要在静态变量或者静态内部类中使用非静态外部成员变量（包括context )，即使要使用，也要考虑适时把外部成员变量置空；也可以在内部类中使用弱引用来引用外部类的变量。
@@ -197,6 +217,7 @@ public class cacheBySoftRef{
 
     1.将内部类改为静态内部类
     2.静态内部类中使用弱引用来引用外部类的成员变量
+    
 4.Handler 的持有的引用对象最好使用弱引用，资源释放时也可以清空 Handler 里面的消息。比如在 Activity onStop 或者 onDestroy 的时候，取消掉该 Handler 对象的 Message和 Runnable.
 
 5.在 Java 的实现过程中，也要考虑其对象释放，最好的方法是在不使用某对象时，显式地将此对象赋值为 null，比如使用完Bitmap 后先调用 recycle()，再赋为null,清空对图片等资源有直接引用或者间接引用的数组（使用 array.clear() ; array = null）等，最好遵循谁创建谁释放的原则。
