@@ -373,6 +373,66 @@
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
+
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/zidianxu.png)
+    
+    public class zidianxu_string {
+	public static void main(String[] args) {
+		zidianxu_string p=new zidianxu_string();
+		Scanner sc=new Scanner(System.in);
+		System.out.println("请输入字符串：");
+		String S=sc.next();
+		System.out.println("字符串字典序如下："+Permutation(S));
+	}
+	
+	
+	public static ArrayList<String> Permutation(String str)
+	{
+		List<String> res=new ArrayList<>();
+		if(str!=null && str.length()>0)
+		{
+			PermutationHelper(str.toCharArray(),0,res);
+			Collections.sort(res);
+		}
+		
+		return (ArrayList)res;
+	}
+	
+	public static void PermutationHelper(char[] cs,int i,List<String> list)
+	{
+		if(i==cs.length-1)
+		{
+			String val=String.valueOf(cs);
+			if(!list.contains(val))
+			{
+				list.add(val);
+			}
+		}
+		else
+		{
+			for(int j=i;j<cs.length;j++)
+			{
+				swap(cs,i,j);
+				PermutationHelper(cs,i+1,list);
+				swap(cs,i,j);
+			}
+		}
+	}
+	
+	public static void swap(char[] cs,int i,int j)
+	{
+		char temp=cs[i];
+		cs[i]=cs[j];
+		cs[j]=temp;
+	}
+     }
+
+
+结果：
+请输入字符串：
+abcd
+字符串字典序如下：[abcd, abdc, acbd, acdb, adbc, adcb, bacd, badc, bcad, bcda, bdac, bdca, cabd, cadb, cbad, cbda, cdab, cdba, dabc, dacb, dbac, dbca, dcab, dcba]
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
