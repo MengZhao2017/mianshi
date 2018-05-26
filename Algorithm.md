@@ -436,6 +436,75 @@ abcd
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4,。
+
+方法1：
+
+		    public class GetLeastNumbers {
+			public static void main(String[] args) {
+				// TODO Auto-generated method stub
+				Scanner sc=new Scanner(System.in);
+				int array[]=new int[8];
+				for(int i=0;i<=7;i++)
+				{
+					System.out.println("请输入一个整数：");
+					array[i]=sc.nextInt();
+				}
+				System.out.println(GetLeastNumbers_Solution(array,4));
+			}
+
+			public static ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
+				Arrays.sort(input);
+				List list=new ArrayList<>();
+				for(int i=0;i<k;i++)
+				{
+					list.add(input[i]);
+				}
+				return (ArrayList<Integer>) list;
+		    }
+		}
+
+解法2.
+
+冒泡排序的思想，只不过最外层循环K次就可以了，也就是说不用全部排序，只挑出符合提议的K个就可以。
+
+	public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
+		ArrayList<Integer> al = new ArrayList<Integer>();
+		if (k > input.length) {
+		    return al;
+		}
+		for (int i = 0; i < k; i++) {
+		    for (int j = 0; j < input.length - i - 1; j++) {
+			if (input[j] < input[j + 1]) {  //这里是把最小值替换到最后
+			    int temp = input[j];
+			    input[j] = input[j + 1];
+			    input[j + 1] = temp;
+			}
+		    }
+		    al.add(input[input.length - i - 1]);
+		}
+		return al;
+	    }
+	    
+ 结果：
+ 
+ 请输入一个整数：
+4
+请输入一个整数：
+5
+请输入一个整数：
+1
+请输入一个整数：
+6
+请输入一个整数：
+2
+请输入一个整数：
+7
+请输入一个整数：
+3
+请输入一个整数：
+8
+[1, 2, 3, 4]
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
