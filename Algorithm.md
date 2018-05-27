@@ -683,9 +683,85 @@ true
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+求一维连续子向量的最大和？例如:{6,-3,-2,7,-15,1,2,2},连续子向量的最大和为8(从第0个开始,到第3个为止)。
+
+思想：dp动态规划。
+
+       public class FindGreatestSumOfSubArray {
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		System.out.println("请输入一串整数并在输入的时候用英文逗号隔开：");
+		String inputString=sc.next().toString();
+		String stringArray[]=inputString.split(",");
+		int num[]=new int[stringArray.length];
+		for(int i=0;i<num.length;i++)
+		{
+			num[i]=Integer.parseInt(stringArray[i]);
+		}
+                 //下面是动态规划思想
+		int res=num[0];
+		int max=num[0];
+		for(int i=1;i<num.length;i++)
+		{
+			max=Math.max(max+num[i], num[i]);
+			res=Math.max(max, res);
+		}
+		
+		System.out.println(res);
+
+	}
+
+     }
+
+结果：
+
+请输入一串整数并在输入的时候用英文逗号隔开：
+
+6,-3,-2,7,-15,1,2,2
+
+8
 
 ----------------------------------------------------------------------------------------------------------------------------------------
+统计整数内出现 1 的个数：
 
+求出1~13的整数中1出现的次数,并算出100~1300的整数中1出现的次数？为此他特别数了一下1~13中包含1的数字有1、10、11、12、13因此共出现6次,但是对于后面问题他就没辙了。ACMer希望你们帮帮他,并把问题更加普遍化,可以很快的求出任意非负整数区间中1出现的次数。
+
+
+
+     public class NumberOf_1_between1AndN {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		int count=0;
+		Scanner sc=new Scanner(System.in);
+		System.out.println("请输入一个正整数：");
+		int n=sc.nextInt();
+		StringBuffer s=new StringBuffer();
+		for(int i=1;i<n;i++)
+		{
+			s.append(i);
+		}
+		
+		for(int i=0;i<s.length()-1;i++)
+		{
+			if(s.charAt(i)=='1')
+			{
+				count++;
+			}
+		}
+		
+		System.out.println("一共有数字1的个数是："+count);
+
+	}
+       }
+
+
+结果：
+请输入一个正整数：
+
+13
+
+一共有数字1的个数是：5
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
