@@ -224,6 +224,8 @@
 
 查找链表的中间结点
 
+思想：使用指针追赶的方法，fast每次走两步，slow每次走一步，当fast到链表尾部的时候，slow指向中间的链表结点。
+
 	public class find_mid_lianbiao {
 	public static void main(String[] args) {
 		
@@ -510,7 +512,53 @@ abcd
 
 判断一个单链表是不是有环？
 
-	static boolean a;
+思想：使用指针追赶的方法，slow指针每次走一步，fast指针每次走两步，如果存在环，则两者相遇。
+
+     public class ListIsLoop {
+
+	class node{
+	    node next=null;
+		int data;
+		 public node(int data)
+		 {
+			 this.data=data;
+		 }
+		public node getNext() {
+			return next;
+		}
+		public void setNext(node next) {
+			this.next = next;
+		}
+		public int getData() {
+			return data;
+		}
+		public void setData(int data) {
+			this.data = data;
+		}
+	}
+	
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		ListIsLoop a=new ListIsLoop();
+		node n1 =a. new node(1);  
+		node n2 =a. new node(2);  
+		node n3 = a.new node(3);  
+		node n4 = a.new node(4);  
+		node n5 = a.new node(5);  
+	
+        n1.next = n2;  
+        n2.next = n3;  
+        n3.next = n4;  
+        n4.next = n5;  
+        n5.next = n1;  
+        
+      System.out.println(IsLoop(n1)); 
+	
+
+	}
 	
 	public static boolean IsLoop(node head)
 	{
@@ -527,23 +575,111 @@ abcd
 			if(fast==slow)
 			{
 				System.out.println("这个链表有环");
-				a= true;
+				return true;
 			}
 		}
-		return a;
-		
+		return false;
+	}	
+    }
+
+结果：
+
+这个链表有环
+
+true
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 寻找单链表中的环？
 
+思想：分别从碰撞的点，头指针开始走，相遇的那个点就是连接点。
 
+    public class ListIsLoop {
+	class node{	
+	    node next=null;
+		int data;
+		 public node(int data)
+		 {
+			 this.data=data;
+		 }
+		public node getNext() {
+			return next;
+		}
+		public void setNext(node next) {
+			this.next = next;
+		}
+		public int getData() {
+			return data;
+		}
+		public void setData(int data) {
+			this.data = data;
+		}
+	}
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		ListIsLoop a=new ListIsLoop();
+		node n1 =a. new node(1);  
+		node n2 =a. new node(2);  
+		node n3 = a.new node(3);  
+		node n4 = a.new node(4);  
+		node n5 = a.new node(5);  	
+        n1.next = n2;  
+        n2.next = n3;  
+        n3.next = n4;  
+        n4.next = n5;  
+        n5.next = n2;  
+        
+      System.out.println(FindLoopPort(n1).getData()); 
+	}
+	
+	//找到环的入口
+	
+	public static node FindLoopPort(node head)
+	{
+		node fast=head;
+		node slow=head;
+		while(fast!=null && fast.next!=null)
+		{
+			fast=fast.next.next;
+			slow=slow.next;
+			if(fast==slow)
+			{
+				break;
+			}
+		}
+		
+		if(fast==null || fast.next==null)
+		{
+			return null;
+		}
+		
+		slow=head;
+		while(slow!=fast)
+		{
+			slow=slow.next;
+			fast=fast.next;
+		}
+		return slow;
+	      }
+            }
+
+结果：
+
+2
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+判断两个链表（无环）是否相交？
+
+思路：先遍历一个链表到其尾部，然后将尾部原本指向null的next指针指向第二个链表，这样两个链表就合并成一个链表了，问题就转化为判断一个链表是否有环的问题了，可以使用上面的方法求解。
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+寻找两个相交链表的第一个公共结点？
 
+思路：最简单的方法就是先顺序访问其中的一个链表，在每访问一个结点时候，都对另外一个链表进行遍历，知道找到一个相等的结点位置。
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
