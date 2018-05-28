@@ -6,8 +6,7 @@
 [Android-performance](https://github.com/MengZhao2017/mianshi/blob/master/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.md)
 --
 
-[Android-Design Pattern](https://github.com/MengZhao2017/mianshi/blob/master/Java-Design%20Pattern.md)
---
+
 
 [Android](https://github.com/MengZhao2017/mianshi/blob/master/Android%E9%9D%A2%E8%AF%95.md)
 --
@@ -20,7 +19,8 @@
 
 [Java](https://github.com/MengZhao2017/mianshi/blob/master/Java%E9%9D%A2%E8%AF%95.md)
 --
-
+[Java-Design Pattern](https://github.com/MengZhao2017/mianshi/blob/master/Java-Design%20Pattern.md)
+--
 
 [Computer network](https://github.com/MengZhao2017/mianshi/blob/master/Net%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C.md)
 --
