@@ -6,6 +6,9 @@
 [Android-performance](https://github.com/MengZhao2017/mianshi/blob/master/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96.md)
 --
 
+[Android-Design Pattern]((https://github.com/MengZhao2017/mianshi/blob/master/Java-Design%20Pattern.md))
+--
+
 [Android](https://github.com/MengZhao2017/mianshi/blob/master/Android%E9%9D%A2%E8%AF%95.md)
 --
 
