@@ -810,6 +810,63 @@ app:layout_widthPercent="50%w">
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+线程池原理解析：
+
+每次newThread 新建对象性能差
+
+线程缺乏统一管理，可能无限制创建线程，相互之间竞争，及可能占用过多系统资源导致死机或者OOM
+
+缺乏更多的功能，如定时执行，定期执行，线程中断
+
+JDK提供四种常见线程池：
+
+newFixedThreadPool
+
+newSingleThreadExecutor
+
+newCachedThredPool
+
+newScheduledThreadPool
+
+java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类，因此如果要透彻地了解Java中的线程池，必须先了解这个类。下面我们来看一下ThreadPoolExecutor类的具体实现源码。
+
+    public class ThreadPoolExecutor extends AbstractExecutorService {
+        .....
+        public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTime,TimeUnit unit,
+                BlockingQueue<Runnable> workQueue);
+
+        public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTime,TimeUnit unit,
+                BlockingQueue<Runnable> workQueue,ThreadFactory threadFactory);
+
+        public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTime,TimeUnit unit,
+                BlockingQueue<Runnable> workQueue,RejectedExecutionHandler handler);
+
+        public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTime,TimeUnit unit,
+            BlockingQueue<Runnable> workQueue,ThreadFactory threadFactory,RejectedExecutionHandler handler);
+        ...
+      }
+
+从上面的代码可以得知，ThreadPoolExecutor继承了AbstractExecutorService类，并提供了四个构造器，事实上，通过观察每个构造器的源码具体实现，发现前面三个构造器都是调用的第四个构造器进行的初始化工作。
+
+corePoolSize：核心池的大小
+
+maximumPoolSize：线程池最大线程数
+
+keepAliveTime：表示线程没有任务执行时最多保持多久时间会终止。
+
+自己定义线程池来理解原理
+
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/threadpool.png)
+
+图片中解释了每个参数的实际意义
+
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/threadpool1.png)
+
+根据上图来讲解原理：
+
+图上的长方形假设是我们的线程池，在长方形的最下半部分红色就是我们的corepoolsize的大小，假设我们设置为5.图中绿色半部分是我们的maximumPoolsize，假设我们设置为10
+
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
