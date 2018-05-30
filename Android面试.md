@@ -860,7 +860,7 @@ keepAliveTime：表示线程没有任务执行时最多保持多久时间会终�
 
 图片中解释了每个参数的实际意义
 
-![](https://github.com/MengZhao2017/mianshi/raw/master/res/threadpool1.png)
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/threadpool2.png)
 
 根据上图来讲解原理：
 
