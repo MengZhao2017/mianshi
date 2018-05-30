@@ -779,6 +779,34 @@ MVP作为MVC的演化，解决了MVC不少的缺点，对于Android来说，MVP�
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+Android中屏幕适配方案:
+
+1.代码适配
+
+动态获取屏幕的尺寸，密度，在代码中自动摄者比例，动态加载
+
+    int screenWidth = getWindowManager().getDefaultDisplay().getWidth();
+         int screenHeight = getWindowManager().getDefaultDisplay(). getHeight();
+        LayoutParams params = new LayoutParams(( int) (0.25* screenWidth), (int) (screenHeight*0.1));
+         tv1.setLayoutParams(params );
+        params = new LayoutParams((int) ( 0.5*screenWidth), (int ) (screenHeight*0.1));
+         tv2.setLayoutParams(params );
+         params = new LayoutParams((int) ( 0.75*screenWidth), (int ) (screenHeight*0.1));
+         tv3.setLayoutParams(params );
+         params = new LayoutParams(screenWidth, ( int) (screenHeight*0.1) );
+         tv4.setLayoutParams(params );
+
+2.尺寸适配
+
+根据不同的屏幕尺寸，加载不同的配置文件。
+
+3.百分比适配
+
+Android5.0以后，只要在开发过程中使用PercentRelativeLayout、PercentFrameLayout替换FrameLayout、RelativeLayout即可。
+
+用法:在原有基础上设置宽高百分比时指明分辨参数
+app:layout_heightPercent="50%w"
+app:layout_widthPercent="50%w">
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
