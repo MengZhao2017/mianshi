@@ -852,7 +852,7 @@ corePoolSize：核心池的大小
 
 maximumPoolSize：线程池最大线程数
 
-keepAliveTime：表示线程没有任务执行时最多保持多久时间会终止。
+keepAliveTime：当大于corepoolsize的线程在执行完任何任务后，多少秒会被杀死。
 
 自己定义线程池来理解原理
 
@@ -864,7 +864,75 @@ keepAliveTime：表示线程没有任务执行时最多保持多久时间会终�
 
 根据上图来讲解原理：
 
-图上的长方形假设是我们的线程池，在长方形的最下半部分红色就是我们的corepoolsize的大小，假设我们设置为5.图中绿色半部分是我们的maximumPoolsize，假设我们设置为10
+图上的长方形假设是我们的线程池相当于蓄水池，在长方形的最下半部分红色就是我们的corepoolsize的大小，假设我们设置为5.图中绿色半部分是我们的maximumPoolsize，假设我们设置为10，往池子里蓄水，一般情况下，不会超过最小面红色警戒线，那什么时候到最上面那条警戒线呢。这个时候就是关于我们的另一个参数任务队列了，图上右边队列（红色），现在假设会有10个任务，核心任务只有5个，那么多出来5个任务，把多出来的5个任务丢进去任务队列里，任务队列也有大小，假设也是5，那么这个时候正好能够运行，假设现在来了11个任务，corepoolsize+workQueue=10，所以现在那么就多出了一个任务，多出来的一个任务怎么办呢？
+
+这个时候，就把多出来的 那1个扔进绿色区域那里，让他来干。但是他最多可以容纳10个任务，线程池里的红色区域5个，所以一共最多能够容纳15个任务，但是这个时候来了16个任务怎么办呢？
+
+自定义线程池：
+
+private static MythreadPool mythreadPool=new MythreadPool(5,10);//假设已经定义好了
+
+public static  void main(String [] args)
+{
+   for(int i=0;i<10;i++)
+   {
+      mythreadPool.execute(new Runnable()){
+           public void run()
+           {
+           getTime();
+           }
+      }
+   }
+}
+
+执行结果：
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/11.png)
+
+没有发现第6个哥们
+
+
+当我们把10改成100 运行结果；
+
+private static MythreadPool mythreadPool=new MythreadPool(5,10);//假设已经定义好了
+
+public static  void main(String [] args)
+{
+   for(int i=0;i<100;i++)
+   {
+      mythreadPool.execute(new Runnable()){
+           public void run()
+           {
+           getTime();
+           }
+      }
+   }
+}
+
+
+看出结果还是5个哥们，还是没有出现第6个线程  
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/12.png)
+
+其实这是线程中的一种机制：其实是我们在设置BlockQueue的时候，把任务队列的值设为了100.也就是可以存100个任务，当我们执行100个任务的时候，5个任务在红色区域里执行，那么剩下的95个就会被放进workQueue里，
+
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/13.png)
+
+workQUueue里100个任务+coresizepool里的5个任务=105个任务，也就是最多容纳105个任务，那此时我们如果有106个任务来的时候呢？  
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/14.png)
+
+可以出来出现了6这个线程，如果换成107呢，就出现了第7个线程。
+
+可以得出：当任务数大于 workQUueue里100个任务+coresizepool里的5个任务=105个任务时候，多出来的任务就会使用maximumPoolSize里的线程去执行操作。
+
+workQUeue里100+maximumPoolSize里10=110，也就是说最大的任务数是110个，当我们执行111个任务的时候就会出现错误。
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/15.png)
+
+
+
+
+
+
+
+
 
 
 
