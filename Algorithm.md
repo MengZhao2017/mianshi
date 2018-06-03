@@ -765,6 +765,90 @@ true
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
+输入一个正整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3，32，321}，则打印出这三个数字能排成的最小数字为321323。
+
+	import java.util.*;
+
+	public class printMinNumber {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner sc=new Scanner(System.in);
+		System.out.println("请输入一组整数，并用英文逗号分开：");
+		String inputString=sc.next().toString();
+		String stringArray[]=inputString.split(",");
+		int num[]=new int[stringArray.length];
+		for(int i=0;i<num.length;i++)
+		{
+			num[i]=Integer.parseInt(stringArray[i]);
+		}
+
+	    System.out.println(printNum(num));
+
+	}
+	
+	
+	public static String printNum(int num[])
+	{
+		if(num==null ||num.length==0)
+		{
+			return "";
+		}
+		
+		MyComparator myComparator=new printMinNumber().new MyComparator();
+		List<Integer>  list=new ArrayList<Integer>();
+		for(int i:num)
+		{
+			list.add(i);
+		}
+		
+		Collections.sort(list, myComparator);
+		StringBuilder sb=new StringBuilder();
+		for(Integer val :list) {
+			sb.append(val);
+		}
+		return sb.toString();
+		
+	}
+	
+	
+	//内部类
+	
+	public class MyComparator implements Comparator<Integer>{
+		
+		public int compare(Integer o1,Integer o2)
+		{
+			String s1=String.valueOf(o1);
+			String s2=String.valueOf(o2);
+			String str1=s1+s2;
+			String str2=s2+s1;
+			return str1.compareTo(str2);
+		}
+		
+	}
+
+    }
+
+结果：
+
+请输入一组整数，并用英文逗号分开：
+
+3,32,321
+
+321323
+
+注解：这里说一下重写的 public int compareTo(Student o){} 这个方法，它返回三种 int 类型的值： 负整数，零 ，正整数。
+
+返回值	含义
+
+负整数	当前对象的值 < 比较对象的值 ， 位置排在前
+
+零	当前对象的值 = 比较对象的值 ， 位置不变
+
+正整数	当前对象的值 > 比较对象的值 ， 位置排在后
+
+关于比较器，比如例题中的{3，32，321} 数组中先放入3，而后3和32比较，因为332>323 所以3>32 数组此时为[32,3]; 再往数组中加入321，先与32比较，32132<32321 故 321<32  故321应排在32前面，再与3比较 3213<3321 故321<3 数组最终排序[321，32，3]
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
