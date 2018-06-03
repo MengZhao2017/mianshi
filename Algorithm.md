@@ -851,7 +851,63 @@ true
 关于比较器，比如例题中的{3，32，321} 数组中先放入3，而后3和32比较，因为332>323 所以3>32 数组此时为[32,3]; 再往数组中加入321，先与32比较，32132<32321 故 321<32  故321应排在32前面，再与3比较 3213<3321 故321<3 数组最终排序[321，32，3]
 
 ----------------------------------------------------------------------------------------------------------------------------------------
+把只包含因子2、3和5的数称作丑数（Ugly Number）。例如6、8都是丑数，但14不是，因为它包含因子7。 习惯上我们把1当做是第一个丑数。求按从小到大的顺序的第N个丑数。
 
+
+	package ex1;
+	import java.text.MessageFormat;
+	import java.util.*;
+	public class choushu {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc=new Scanner(System.in);
+		System.out.println("请输入一个正整数：");
+		int input=sc.nextInt();
+		System.out.println(MessageFormat.format("按照 从小到大的第{0}个丑数为：{1}",input,GetUglyNumber(input)));
+
+	}
+	
+	
+	public static int GetUglyNumber(int index)
+	{
+		
+		if(index==0)
+		{
+			return 0;
+		}
+		
+	ArrayList<Integer> list=new ArrayList<Integer>();
+	//add第一个丑数
+	list.add(1);
+	//三个小标用于记录丑数的位置
+	int i2=0,i3=0,i5=0;
+	
+	while(list.size()<index)
+	{
+		//三个数都是可能的丑数，取最小的放进丑数数组里面
+		int n2=list.get(i2)*2;
+		int n3=list.get(i3)*3;
+		int n5=list.get(i5)*5;
+		int min=Math.min(n2, Math.min(n3, n5));
+		list.add(min);
+		if(min==n2)
+			i2++;
+		if(min==n3)
+			i3++;
+		if(min==n5)
+			i5++;
+	}
+	
+	return list.get(list.size()-1);		
+	}
+    }
+
+结果：
+
+请输入一个正整数：
+10
+按照 从小到大的第10个丑数为：12
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
