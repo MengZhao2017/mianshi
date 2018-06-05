@@ -500,14 +500,14 @@ ConcurrentHashMap中对这个数据结构，针对并发稍微做了一点调整
 
 饿汉：
 
-     public class Singleton{
-        private static final Singleton s=new Singleton();
-          private Singleton(){};
-          public static  Singleton getS()
-          {
-             return s;
-          }
-       }
+       public class Singleton{
+          private static final Singleton s=new Singleton();
+            private Singleton(){};
+            public static  Singleton getS()
+            {
+               return s;
+            }
+         }
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
