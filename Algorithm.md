@@ -1058,7 +1058,63 @@ ababcabababab
 请输入一个整数：[[9, 10, 11, 12, 13, 14, 15, 16], [18, 19, 20, 21, 22]]
 
 
-----------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
+输入一个递增排序的数组和一个数字S，在数组中查找两个数，是的他们的和正好是S，如果有多对数字的和等于S，输出两个数的乘积最小的。
+
+	package ex1;
+	import java.util.*;
+	import java.util.Scanner;
+
+	public class FindTwoSum {
+		public static void main(String[] args) {
+			// TODO Auto-generated method stub
+			Scanner sc=new Scanner(System.in);
+			System.out.println("请输入一组从小到大的整数，并用英文逗号分开：");
+			String inputString=sc.next().toString();
+			String stringArray[]=inputString.split(",");
+			int num[]=new int[stringArray.length];
+			for(int i=0;i<num.length;i++)
+			{
+				num[i]=Integer.parseInt(stringArray[i]);
+			}
+			  System.out.println(Findtwosum(num,10));
+		}
+
+
+		public static ArrayList<Integer> Findtwosum(int a[],int sum)
+		{
+			ArrayList<Integer> list=new ArrayList<Integer>();
+			if(a==null || a.length<2)
+			{
+				return list;
+			}
+			int i=0,j=a.length-1;
+			while(i<j)
+			{
+				if(a[i]+a[j]==sum)
+				{
+					list.add(a[i]);
+					list.add(a[j]);
+					return list;
+				}else if(a[i]+a[j]>sum)
+				{
+					j--;
+				}else
+				{
+					i++;
+				}
+			}
+			return list;
+		}
+	}
+
+结果：
+
+请输入一组从小到大的整数，并用英文逗号分开：
+
+1,2,3,4,5,6
+
+[4, 6]
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
