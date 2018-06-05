@@ -999,6 +999,63 @@ ababcabababab
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
+输出所有和为S的连续正数序列。序列内按照从小至大的顺序，序列间按照开始数字从小到大的顺序：
+
+		package ex1;
+		import java.util.*;
+		public class FindContinuousSequence {
+
+			public static void main(String[] args) {
+				// TODO Auto-generated method stub
+				Scanner sc=new Scanner(System.in);
+				System.out.println("请输入一个整数：");
+				System.out.println("结果序列为："+Findsum(sc.nextInt()));
+
+			}
+
+
+		 public static ArrayList<ArrayList<Integer>> Findsum(int sum)
+		 {
+			 ArrayList<ArrayList<Integer>> result =new ArrayList<>();
+			 //两个起点，相当于动态窗口的两边
+			 int plow=1,phigh=2;
+
+			 while(phigh>plow)
+			 {
+				 //由于是连续的，差为1的一个序列
+				 int cur=(phigh+plow) *(phigh-plow+1)/2;
+				 //相等，那么就将窗口范围的所有数添加进结果集
+				 if(cur==sum)
+				 {
+					 ArrayList<Integer> list =new ArrayList<>();
+					 for(int i=plow;i<=phigh;i++)
+					 {
+						 list.add(i);
+					 }
+
+					 result.add(list);
+					 plow++;
+				 }else if(cur<sum)
+				 {
+					 phigh++;
+				 }else {
+					 plow++;
+				 }
+			 }
+
+			 return result;
+		 }
+
+
+		}
+
+结果：
+
+请输入一个整数：
+
+100
+
+请输入一个整数：[[9, 10, 11, 12, 13, 14, 15, 16], [18, 19, 20, 21, 22]]
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
