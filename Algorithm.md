@@ -1117,8 +1117,62 @@ ababcabababab
 [4, 6]
 
 
-----------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
+汇编语言中有一种移位指令叫做循环左移（ROL），现在有个简单的任务，就是用字符串模拟这个指令的运算结果。对于一个给定的字符序列S，请你把其循环左移K位后的序列输出。例如，字符序列S=”abcXYZdef”,要求输出循环左移3位后的结果，即“XYZdefabc”。是不是很简单？OK，搞定它！
 
+	package ex1;
+	import java.util.ArrayList;
+	import java.util.Scanner;
+
+	public class LeftRotateString {
+		public static void main(String[] args) {
+			// TODO Auto-generated method stub
+			Scanner sc=new Scanner(System.in);
+			System.out.println("请输入一个字符串：");
+			String s=sc.next();
+			System.out.println("请输入一个左移整数：");
+			int num=sc.nextInt();
+			System.out.println("最后结果为："+LeftToStr(s,num));
+		}
+
+		public static String LeftToStr(String str,int n)
+		{
+	//		StringBuffer buf=new StringBuffer();
+	//		StringBuffer buf2=new StringBuffer();
+	//		int len=str.length();
+	//		for(int i=0;i<n;i++)
+	//		{
+	//			buf.append(str.charAt(i));
+	//		}
+	//		String q=buf.toString();
+	//		for(int i=n;i<len;i++)
+	//		{
+	//			buf2.append(str.charAt(i));
+	//		}
+	//		String q2=buf2.toString();
+	//		
+	//		return q2+q;
+
+			//方法二
+			if(str==null || n<=0 || str.length()<n)
+				return "";
+			StringBuilder ss=new StringBuilder(str);
+			ss.append(ss.substring(0,n));
+			return ss.substring(n, ss.length());
+		}
+	}
+
+结果：
+
+请输入一个字符串：
+
+abcXYZdef
+
+请输入一个左移整数：
+
+3
+
+最后结果为：XYZdefabc
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
