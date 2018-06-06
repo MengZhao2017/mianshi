@@ -1174,9 +1174,56 @@ abcXYZdef
 
 最后结果为：XYZdefabc
 
-----------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
+牛客最近来了一个新员工Fish，每天早晨总是会拿着一本英文杂志，写些句子在本子上。同事Cat对Fish写的内容颇感兴趣，有一天他向Fish借来翻看，但却读不懂它的意思。例如，“student. a am I”。后来才意识到，这家伙原来把句子单词的顺序翻转了，正确的句子应该是“I am a student.”。Cat对一一的翻转这些单词顺序可不在行，你能帮助他么？
 
+	package ex1;
 
+	import java.util.ArrayList;
+	import java.util.Scanner;
+
+	public class ReverseSentence {
+		public static void main(String[] args) {
+			// TODO Auto-generated method stub
+
+			Scanner sc=new Scanner (System.in);
+			System.out.println("请输入一串字符串：");
+			String sss=sc.next();
+			System.out.println("结果为"+ReSentence(sss));
+		}
+
+		public static String ReSentence(String str)
+		{
+			if(str==null || str.trim().equals(""))
+			{
+				return str;
+			}
+
+			String[] s=str.split(" ");
+
+			StringBuffer sb=new StringBuffer();
+
+			for(int i=s.length;i>0;i--)
+			{
+				sb.append(s[i-1]);
+				if(i>1)
+				{
+					sb.append(" ");
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+结果：
+请输入一串字符串：
+
+student a am i
+
+student
+
+注：牛客上通过了，eclipse没有完整结果。啥情况。。。
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
