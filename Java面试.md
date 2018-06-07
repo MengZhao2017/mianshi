@@ -1084,8 +1084,18 @@ synchronized 的缺点是粒度比较粗，在HashTable是一个线程安全的�
 自旋锁原理非常简单，如果持有锁的线程能在很短时间内释放锁资源，那么那些等待竞争锁的线程就不需要做内核态和用户态之间的切换进入阻塞挂起状态，它们只需要等一等（自旋），等持有锁的线程释放锁后即可立即获取锁，这样就避免用户线程和内核的切换的消耗。这种方式增加了CPU的消耗，但是减少了线程切换消耗。
 
 ---------------------------------------------------------------------------------------------------------------------------------------
+说说你对 MVC、MVP、MVVM 的理解？
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/mvc-mvp-mvvm.png)
 
 
+通过上图我们可以发现 MVC(Model-View-Controller)、MVP(Model-View-Presenter)、MVVM(Model-View-ViewModel) 的共同点是都具备独立的 Model 和 View，其中 Model 是数据对象，Model 不依赖于 View 的实现，而 View 是 UI 层，提供对最终用户的交互操作功能。而三者的差异主要提现在 Controller、Presenter、ViewModel 上。
+
+
+Controller 会接收 View 的操作，然后根据操作调用 Model 的接口进行数据操作或进行 View 的跳转，所以一个 Controller 可以对应多个 View，Controller 对 View 实现不太关心，只会被动地接收，Model 的数据变化会不经过 Controller 而直接通知 View，一般 View 采用观察者模式监听 Model 的变化。
+
+Presenter 与 Controller 类似，接收 View 的操作对 Model 进行操作，Presenter 会反作用于 View，Model 的数据变化首先会被 Presenter 获取，然后 Presenter 再去更新 View；一个 Presenter 只能对应一个 View，所以接口层代码会比较臃肿。
+
+ViewModel 可以理解成是包含 View 的一些数据属性和操作的一种模型，View 的变化会直接影响 ViewModel，ViewModel 的变化或者内容也会直接体现在 View 上，ViewModel 与 Model 进行沟通操作；这种模式的核心就是数据绑定（Data Binding）。
 
 ---------------------------------------------------------------------------------------------------------------------------------------
 
