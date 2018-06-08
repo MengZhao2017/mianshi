@@ -1413,8 +1413,69 @@ true
 
 字符串转为整数的结果为：：2147483647
 
-----------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
 
+给定一个数组A[0,1,...,n-1],请构建一个数组B[0,1,...,n-1],其中B中的元素B[i]=A[0]*A[1]*...*A[i-1]*A[i+1]*...*A[n-1]。不能使用除法。
+
+思路：
+
+B[i]的值可以看作下图的矩阵中每行的乘积。
+
+下三角用连乘可以很容求得，上三角，从下向上也是连乘。
+
+因此我们的思路就很清晰了，先算下三角中的连乘，即我们先算出B[i]中的一部分，然后倒过来按上三角中的分布规律，把另一部分也乘进去。
+![](https://github.com/MengZhao2017/mianshi/raw/master/res/muti.png)
+
+
+		package ex1;
+		import java.util.Scanner;
+		import java.util.Arrays;
+		public class Multiply {
+			public static void main(String[] args) {
+				Scanner sc=new Scanner(System.in);
+				System.out.println("请输入一段整数，并用英文逗号隔开：");
+				String inputString=sc.next().toString();
+				String stringArray[]=inputString.split(",");
+				int num[]=new int[stringArray.length];
+				for(int i=0;i<num.length;i++)
+				{
+					num[i]=Integer.parseInt(stringArray[i]);
+				}
+				 System.out.println("重构后的数组是"+Arrays.toString(muti(num)));
+			}
+
+			public static int[] muti(int[] A)
+			{
+				int length=A.length;
+				int[] B=new int[length];
+				if(length!=0)
+				{
+					B[0]=1;
+					//计算下三角的矩阵
+
+				    for(int i=1;i<length;i++)
+				    {
+					B[i]=B[i-1] *A[i-1];
+				    }
+				    int temp=1;
+				    //计算上三角矩阵
+
+				    for(int j=length-2;j>=0;j--)
+				    {
+					temp*=A[j+1];
+					B[j]*=temp;
+				    }
+				}
+				return B;
+			}
+		}
+结果：
+
+请输入一段整数，并用英文逗号隔开：
+
+1,2,3,1,2,3,5
+
+重构后的数组是[180, 90, 60, 180, 90, 60, 36]
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
