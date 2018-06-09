@@ -17,8 +17,21 @@ Map是一个将key映射到value的对象.一个Map不能包含重复的key：�
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 Iterator是什么？
+Iterator是一种经典的设计模式，用于在不需要暴露数据是如何保存在数据结构的细节的情况下，来遍历一个数据结构。
 
 Iterator接口提供遍历任何Collection的接口。我们可以从一个Collection中使用迭代器方法来获取迭代器实例。迭代器取代了Java集合框架中的Enumeration。迭代器允许调用者在迭代过程中移除元素。
+
+怎么用？
+
+          Collection<String> collection =new ArrayList<String>();
+          collection.add("shenzhen");
+          collection.add("nanshan");
+          collection.add("jiangsu");
+          Iterator<String> iterator=collection.iterator();
+          while(iterator.hashNext())
+          {
+              System.out.println(iterator.next();
+          }
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -177,13 +190,15 @@ Java.util.concurrent.BlockingQueue是一个队列，在进行检索或移除一�
 
 Comparable和Comparator接口是什么？
 
-如果我们想使用Array或Collection的排序方法时，需要在自定义类里实现Java提供Comparable接口。Comparable接口有compareTo(T OBJ)方法，它被排序方法所使用。我们应该重写这个方法，如果“this”对象比传递的对象参数更小、相等或更大时，它返回一个负整数、0或正整数。但是，在大多数实际情况下，我们想根据不同参数进行排序。比如，作为一个CEO，我想对雇员基于薪资进行排序，一个HR想基于年龄对他们进行排序。这就是我们需要使用Comparator接口的情景，因为Comparable.compareTo(Object o)方法实现只能基于一个字段进行排序，我们不能根据对象排序的需要选择字段。
+Comparable是排序接口。若一个类实现了Comparable接口，就意味着该类支持排序。实现了Comparable接口的类的对象的列表或数组可以通过Collections.sort或Arrays.sort进行自动排序。
 
-Comparator接口的compare(Object o1, Object o2)方法的实现需要传递两个对象参数，若第一个参数比第二个小，返回负整数；若第一个等于第二个，返回0；若第一个比第二个大，返回正整数。
+Comparator是比较接口，我们如果需要控制某个类的次序，而该类本身不支持排序(即没有实现Comparable接口)，那么我们就可以建立一个“该类的比较器”来进行排序，这个“比较器”只需要实现Comparator接口即可。也就是说，我们可以通过实现Comparator来新建一个比较器，然后通过这个比较器对类进行排序。
+
+compare(Object o1, Object o2)方法的实现需要传递两个对象参数，若第一个参数比第二个小，返回负整数；若第一个等于第二个，返回0；若第一个比第二个大，返回正整数。
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
-Comparable和Comparator接口有何区别？
+Comparable和Comparator接口有何区别？ https://www.cnblogs.com/xujian2014/p/5215082.html
 
 · comparable接口实际上是出自java.lang包
 
